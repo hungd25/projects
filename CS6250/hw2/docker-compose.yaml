@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  bootcamp:
+    image: sunlab/bigbox:latest
+    hostname: bootcamp
+    domainname: local
+    restart: "no"
+    volumes:
+    # Volumes section defined the mappings between host machine and
+    # virtual machine.
+    # ":" split each element into 2 parts
+    # the left part is the folder in host machine
+    # the right part is the folder in virtual machine
+    # docker-compose support relative path
+    # Please refer to
+    # https://docs.docker.com/compose/compose-file/#volumes
+    # for more detail if you are interested
+      - ./data/logs:/var/log
+      - ./data/host:/mnt/host
+    environment:
+      - CONTAINER=docker
+    # /scripts/entrypoint.sh will start all the services
+    # and then finally listen to port 22.
+    command: [ "/scripts/entrypoint.sh" ]
+    ports:
+    # Ports section defined a few rules and forward the network
+    # stream between host machine and vm.
+    # As the rules in volumes section
+    # The left part is for your host machine.
+    # This means you can visit localhost:2333
+    # and then get the response from the app
+    # listening port 22 in docker container 
+      - "2333:22"
+      - "7077:7077" # spark
+      - "4040:4040"
+      - "4041:4041"
+      - "8888:8888"
+      # - "8983:8983" # for solr
